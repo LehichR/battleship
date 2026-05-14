@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
     SDL_FRect nameBox =
     {
         440,
-        350,
+        340,
         400,
         70
     };
@@ -187,6 +187,28 @@ int main(int argc, char* argv[])
         180,
         60
     };
+
+    // --- Настройки количества кораблей ---
+    // Кнопки "-" и "+" для каждого типа, плюс текст между ними
+    SDL_FRect ship1DecBtn = { 400, 420, 40, 40 };
+    SDL_FRect ship1IncBtn = { 500, 420, 40, 40 };
+    // Текст «1‑deck» будем рисовать над кнопками (или слева, как удобнее), а число — между кнопками
+
+    SDL_FRect ship2DecBtn = { 400, 480, 40, 40 };
+    SDL_FRect ship2IncBtn = { 500, 480, 40, 40 };
+
+    SDL_FRect ship3DecBtn = { 400, 540, 40, 40 };
+    SDL_FRect ship3IncBtn = { 500, 540, 40, 40 };
+
+    SDL_FRect ship4DecBtn = { 400, 600, 40, 40 };
+    SDL_FRect ship4IncBtn = { 500, 600, 40, 40 };
+
+    // --- Кнопки сложности AI (сдвинуты ниже) ---
+    SDL_FRect diffEasyBtn = { 400, 670, 120, 50 };
+    SDL_FRect diffHardBtn = { 560, 670, 120, 50 };
+
+    // --- Кнопка сброса на дефолтные настройки ---
+    SDL_FRect resetBtn = { 960, 40, 280, 60 };   
 
     //тут оно рисуется
     while (running)
@@ -302,6 +324,69 @@ int main(int argc, char* argv[])
                         settings.shipColorB = 255;
 
                         SaveSettings(&settings);
+                    }
+
+                    // Обработка кнопок количества кораблей
+                    if (SDL_PointInRectFloat(&point, &ship1DecBtn))
+                    {
+                        if (settings.shipCounts[0] > 0) settings.shipCounts[0]--;
+                    }
+                    if (SDL_PointInRectFloat(&point, &ship1IncBtn))
+                    {
+                        if (settings.shipCounts[0] < 9) settings.shipCounts[0]++;
+                    }
+                    // ... аналогично для ship2, ship3, ship4 ...
+                    if (SDL_PointInRectFloat(&point, &ship2DecBtn))
+                    {
+                        if (settings.shipCounts[1] > 0) settings.shipCounts[1]--;
+                    }
+                    if (SDL_PointInRectFloat(&point, &ship2IncBtn))
+                    {
+                        if (settings.shipCounts[1] < 9) settings.shipCounts[1]++;
+                    }
+                    if (SDL_PointInRectFloat(&point, &ship3DecBtn))
+                    {
+                        if (settings.shipCounts[2] > 0) settings.shipCounts[2]--;
+                    }
+                    if (SDL_PointInRectFloat(&point, &ship3IncBtn))
+                    {
+                        if (settings.shipCounts[2] < 9) settings.shipCounts[2]++;
+                    }
+                    if (SDL_PointInRectFloat(&point, &ship4DecBtn))
+                    {
+                        if (settings.shipCounts[3] > 0) settings.shipCounts[3]--;
+                    }
+                    if (SDL_PointInRectFloat(&point, &ship4IncBtn))
+                    {
+                        if (settings.shipCounts[3] < 9) settings.shipCounts[3]++;
+                    }
+
+                    // Сложность AI
+                    if (SDL_PointInRectFloat(&point, &diffEasyBtn))
+                    {
+                        settings.aiDifficulty = 1;
+                    }
+                    if (SDL_PointInRectFloat(&point, &diffHardBtn))
+                    {
+                        settings.aiDifficulty = 2;
+                    }
+
+                    // Сброс на дефолтные настройки
+                    if (SDL_PointInRectFloat(&point, &resetBtn))
+                    {
+                        // Устанавливаем дефолтные значения
+                        settings.boardSize = 10;
+                        settings.cellSize = 40;
+                        settings.aiDifficulty = 1;
+                        settings.soundEnabled = 1;
+                        settings.shipColorR = 0;
+                        settings.shipColorG = 200;
+                        settings.shipColorB = 0;
+                        settings.shipCounts[0] = 4;
+                        settings.shipCounts[1] = 3;
+                        settings.shipCounts[2] = 2;
+                        settings.shipCounts[3] = 1;
+                        // Имя не сбрасываем, оставляем как есть
                     }
 
                     if (SDL_PointInRectFloat(
@@ -730,6 +815,85 @@ int main(int argc, char* argv[])
                 font,
                 settings.playerName,
                 nameBox);
+
+            // --- Отрисовка количества кораблей ---
+            char ship1Label[] = "1-deck";
+            DrawText(renderer, font, ship1Label, (SDL_FRect) { 300, 420, 90, 40 });
+
+            // Число между кнопками
+            char ship1Num[8];
+            sprintf_s(ship1Num, sizeof(ship1Num), "%d", settings.shipCounts[0]);
+            DrawText(renderer, font, ship1Num, (SDL_FRect) { 460, 420, 40, 40 });
+
+            // Кнопки "-" и "+"
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship1DecBtn);
+            DrawText(renderer, font, "-", ship1DecBtn);
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship1IncBtn);
+            DrawText(renderer, font, "+", ship1IncBtn);
+
+            // 2-deck
+            DrawText(renderer, font, "2-deck", (SDL_FRect) { 300, 480, 90, 40 });
+            char ship2Num[8];
+            sprintf_s(ship2Num, sizeof(ship2Num), "%d", settings.shipCounts[1]);
+            DrawText(renderer, font, ship2Num, (SDL_FRect) { 460, 480, 40, 40 });
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship2DecBtn);
+            DrawText(renderer, font, "-", ship2DecBtn);
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship2IncBtn);
+            DrawText(renderer, font, "+", ship2IncBtn);
+
+            // 3-deck
+            DrawText(renderer, font, "3-deck", (SDL_FRect) { 300, 540, 90, 40 });
+            char ship3Num[8];
+            sprintf_s(ship3Num, sizeof(ship3Num), "%d", settings.shipCounts[2]);
+            DrawText(renderer, font, ship3Num, (SDL_FRect) { 460, 540, 40, 40 });
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship3DecBtn);
+            DrawText(renderer, font, "-", ship3DecBtn);
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship3IncBtn);
+            DrawText(renderer, font, "+", ship3IncBtn);
+
+            // 4-deck
+            DrawText(renderer, font, "4-deck", (SDL_FRect) { 300, 600, 90, 40 });
+            char ship4Num[8];
+            sprintf_s(ship4Num, sizeof(ship4Num), "%d", settings.shipCounts[3]);
+            DrawText(renderer, font, ship4Num, (SDL_FRect) { 460, 600, 40, 40 });
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship4DecBtn);
+            DrawText(renderer, font, "-", ship4DecBtn);
+            SDL_SetRenderDrawColor(renderer, 120, 120, 120, 255);
+            SDL_RenderFillRect(renderer, &ship4IncBtn);
+            DrawText(renderer, font, "+", ship4IncBtn);
+
+            // --- Сложность AI ---
+            DrawText(renderer, font, "AI Difficulty:", (SDL_FRect) { 300, 670, 200, 40 });
+
+            SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+            SDL_RenderFillRect(renderer, &diffEasyBtn);
+            DrawText(renderer, font, "Easy", diffEasyBtn);
+            SDL_RenderFillRect(renderer, &diffHardBtn);
+            DrawText(renderer, font, "Hard", diffHardBtn);
+
+            // Подсветка активной сложности
+            if (settings.aiDifficulty == 1)
+            {
+                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+                SDL_RenderRect(renderer, &diffEasyBtn);
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+                SDL_RenderRect(renderer, &diffHardBtn);
+            }
+
+            // --- Кнопка сброса ---
+            SDL_SetRenderDrawColor(renderer, 180, 80, 80, 255);
+            SDL_RenderFillRect(renderer, &resetBtn);
+            DrawText(renderer, font, "Reset Defaults", resetBtn);
         }
 
         else if (gameState == STATE_RESULTS)
