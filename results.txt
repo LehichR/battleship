@@ -1,4 +1,0 @@
-Player LOSE
-Player WIN
-ASDa LOSE
-ASDa WIN
