@@ -234,6 +234,9 @@ void StartNewGame(Board* playerBoard,
         settings->cellSize = 40;
     }
 
+    *aiState = (AIState){ 0 };
+    aiState->aiDifficulty = settings->aiDifficulty;
+
     *playerBoard = (Board){ 0 };
     *enemyBoard = (Board){ 0 };
 

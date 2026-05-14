@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     {
         10,            // boardSize
         40,            // cellSize
-        1,             // aiDifficulty
+        2,             // aiDifficulty
         1,             // soundEnabled
         0, 200, 0,     // shipColor
         {4, 3, 2, 1},  // shipCounts: 4 однопалубных, 3 двухпалубных, 2 трёхпалубных, 1 четырёхпалубный
