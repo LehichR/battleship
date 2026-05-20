@@ -870,7 +870,7 @@ int main(int argc, char* argv[])
             DrawText(renderer, font, "+", ship4IncBtn);
 
             // --- Сложность AI ---
-            DrawText(renderer, font, "AI Difficulty:", (SDL_FRect) { 300, 670, 200, 40 });
+            DrawText(renderer, font, "AI Difficulty:", (SDL_FRect) { 200, 670, 200, 40 });
 
             SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
             SDL_RenderFillRect(renderer, &diffEasyBtn);
